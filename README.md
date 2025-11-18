@@ -1,8 +1,7 @@
 # Timer
 A minimalist minute-timer with a custom seven-segment display look.
 
-**Live Demo:**  
-**https://aliceree.github.io/timer/**
+**Live Demo:**  https://aliceree.github.io/timer/
 
 The timer starts from a single input field: type the desired number of minutes, press `Enter`, and the screen switches to a glowing countdown made of virtual LCD segments. The interface is intentionally sparse so the segmented digits become the whole focus.
 
