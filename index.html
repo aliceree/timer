@@ -133,18 +133,20 @@
             padding: 0.8rem 1rem;
             border: none;
             background: transparent;
-            color: transparent; /* skryje text, nechá jen kurzor */
+            color: #ff5df7; /* neon text */
             font-size: 1.1rem;
-            font-family: 'LCD Mono', 'Orbitron', 'Share Tech Mono', 'Roboto Mono', monospace;
+            font-family: inherit; /* dědí stejný font jako v body (LCD Mono, Orbitron, ...) */
             letter-spacing: 0.05em;
             text-align: center;
             outline: none;
             transition: color 0.2s ease;
-            caret-color: #ffffff; /* bílý kurzor na černém pozadí */
+            caret-color: #ff5df7; /* neon caret */
+            -webkit-appearance: none;
+            appearance: none;
         }
 
         .setup input:focus {
-            color: #fff;
+            color: #ff5df7;
         }
 
         .hidden {
@@ -155,13 +157,7 @@
 </head>
 <body>
     <div class="setup" id="setup">
-        <input
-            id="minutesInput"
-            type="text"                     <!-- změněno z "number" na "text" aby zmizel spinner -->
-            inputmode="decimal"             <!-- doporučené pro numerické klávesnice na mobilech -->
-            pattern="[0-9]*([.,][0-9]+)?"    <!-- povolit desetinná čísla -->
-            autocomplete="off"
-        >
+        <input id="minutesInput" type="text" inputmode="decimal" pattern="[0-9]*([.,][0-9]+)?" autocomplete="off">
     </div>
     <div id="timerWrapper">
         <div id="timer" aria-live="polite"></div>
@@ -277,6 +273,32 @@
         });
 
         document.addEventListener('keydown', event => {
+            // Esc = reload (stejně jako Cmd+R)
+            if (event.key === 'Escape') {
+                location.reload();
+                return;
+            }
+
+            // F = toggle fullscreen (ignore when focus in input/textarea/contentEditable)
+            try {
+                const active = document.activeElement;
+                const isTyping = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable);
+                if (!isTyping && event.key && event.key.toLowerCase() === 'f') {
+                    event.preventDefault();
+                    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                        const el = document.documentElement;
+                        if (el.requestFullscreen) el.requestFullscreen();
+                        else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen(); // Safari
+                    } else {
+                        if (document.exitFullscreen) document.exitFullscreen();
+                        else if (document.webkitExitFullscreen) document.webkitExitFullscreen(); // Safari
+                    }
+                    return;
+                }
+            } catch (e) {
+                // ignore
+            }
+
             if (event.code === 'Space' && isRunning) {
                 event.preventDefault();
                 isPaused = !isPaused;
