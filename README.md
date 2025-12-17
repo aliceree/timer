@@ -1,6 +1,9 @@
 # Timer
 A minimalist minute-timer with a custom seven-segment display look, available at https://aliceree.github.io/timer/.
 
+## Demo
+[![Alice's Timer](./Timer.gif)](https://aliceree.github.io/timer/)
+
 ## Features
 - **Instant input:** A black start screen with an LCD-style cursor. Enter any number of minutes.
 - **Immersive display:** After pressing `Enter`, the input disappears and you get a countdown.
