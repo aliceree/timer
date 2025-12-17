@@ -11,7 +11,7 @@
         }
 
         :root {
-            --bg: #050505;
+            --bg: #000; /* změněno na čistou černou */
             --neon: #ff5df7;
             --segment-off: rgba(255, 93, 247, 0.15);
         }
@@ -133,15 +133,14 @@
             padding: 0.8rem 1rem;
             border: none;
             background: transparent;
-            color: var(--neon);
+            color: transparent; /* skryje text, nechá jen kurzor */
             font-size: 1.1rem;
             font-family: 'LCD Mono', 'Orbitron', 'Share Tech Mono', 'Roboto Mono', monospace;
             letter-spacing: 0.05em;
             text-align: center;
-            text-transform: uppercase;
             outline: none;
             transition: color 0.2s ease;
-            caret-color: var(--neon);
+            caret-color: #ffffff; /* bílý kurzor na černém pozadí */
         }
 
         .setup input:focus {
@@ -158,9 +157,9 @@
     <div class="setup" id="setup">
         <input
             id="minutesInput"
-            type="number"
-            min="0"
-            step="0.1"
+            type="text"                     <!-- změněno z "number" na "text" aby zmizel spinner -->
+            inputmode="decimal"             <!-- doporučené pro numerické klávesnice na mobilech -->
+            pattern="[0-9]*([.,][0-9]+)?"    <!-- povolit desetinná čísla -->
             autocomplete="off"
         >
     </div>
