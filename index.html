@@ -272,6 +272,38 @@
             }
         });
 
+        // helper: toggle fullscreen (works i v Safari se fallbacky)
+        function toggleFullscreen() {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                const el = document.documentElement;
+                if (el.requestFullscreen) el.requestFullscreen();
+                else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen(); // Safari
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+                else if (document.webkitExitFullscreen) document.webkitExitFullscreen(); // Safari
+            }
+        }
+
+        function handleFKeyEvent(event) {
+            try {
+                const active = document.activeElement;
+                const isTyping = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable);
+                if (isTyping) return false;
+
+                const key = event.key || String.fromCharCode(event.which || event.keyCode || 0);
+                const codeNum = event.keyCode || event.which;
+                if ((key && key.toLowerCase() === 'f') || codeNum === 70) {
+                    event.preventDefault();
+                    toggleFullscreen();
+                    return true;
+                }
+            } catch (e) {
+                // ignore
+            }
+            return false;
+        }
+
+        // keep existing keydown handler but delegate F-check into helper
         document.addEventListener('keydown', event => {
             // Esc = reload (stejně jako Cmd+R)
             if (event.key === 'Escape') {
@@ -279,30 +311,19 @@
                 return;
             }
 
-            // F = toggle fullscreen (ignore when focus in input/textarea/contentEditable)
-            try {
-                const active = document.activeElement;
-                const isTyping = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable);
-                if (!isTyping && event.key && event.key.toLowerCase() === 'f') {
-                    event.preventDefault();
-                    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                        const el = document.documentElement;
-                        if (el.requestFullscreen) el.requestFullscreen();
-                        else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen(); // Safari
-                    } else {
-                        if (document.exitFullscreen) document.exitFullscreen();
-                        else if (document.webkitExitFullscreen) document.webkitExitFullscreen(); // Safari
-                    }
-                    return;
-                }
-            } catch (e) {
-                // ignore
-            }
+            // try fullscreen on keydown (modern browsers)
+            if (handleFKeyEvent(event)) return;
 
             if (event.code === 'Space' && isRunning) {
                 event.preventDefault();
                 isPaused = !isPaused;
             }
+        });
+
+        // Safari sometimes triggers 'keypress' instead of 'keydown' for printable keys —
+        // proto přidáme i posluchač na 'keypress' pro lepší kompatibilitu.
+        document.addEventListener('keypress', event => {
+            handleFKeyEvent(event);
         });
 
         renderTimer("00:00");
