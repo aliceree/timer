@@ -1,5 +1,5 @@
 # Timer
-A minimalist minute-timer with a custom seven-segment display look, available at https://aliceree.github.io/timer/.
+A minimalist minute-timer with a custom seven-segment display look, available at https://aliceree.com/projects/timer/.
 
 
 [![Alice's Timer](./Timer.gif)](https://aliceree.github.io/timer/)
